@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1720" width="100%" height="100%" style="background:#ffffff; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#475569"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="520" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#0f172a">SnackCheck - Diagrama de Arquitectura y Flujo n8n</text>
+
+  <!-- 1. Webhook -->
+  <rect x="400" y="50" width="240" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a8a">POST /nutrition-check</text>
+  <text x="520" y="95" text-anchor="middle" font-size="12" fill="#1e40af">Webhook - Receive Barcode</text>
+
+  <line x1="520" y1="110" x2="520" y2="160" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision 1: Body Empty? -->
+  <polygon points="520,160 620,205 520,250 420,205" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#78350f">¿Cuerpo Vacío?</text>
+  <text x="520" y="218" text-anchor="middle" font-size="11" fill="#92400e">Validate - Body Empty?</text>
+
+  <!-- Rama Docs -->
+  <line x1="620" y1="205" x2="760" y2="205" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="690" y="195" text-anchor="middle" font-size="12" font-weight="bold" fill="#15803d">Sí (Vacío)</text>
+  <rect x="760" y="175" width="230" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="875" y="200" text-anchor="middle" font-size="13" font-weight="bold" fill="#166534">HTTP 200 OK (JSON)</text>
+  <text x="875" y="220" text-anchor="middle" font-size="11" fill="#15803d">Respond - Self Documentation</text>
+
+  <!-- Rama Has Body -->
+  <line x1="520" y1="250" x2="520" y2="310" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="545" y="280" font-size="12" font-weight="bold" fill="#0369a1">No</text>
+
+  <!-- Decision 2: Valid Barcode? -->
+  <polygon points="520,310 630,355 520,400 410,355" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="350" text-anchor="middle" font-size="13" font-weight="bold" fill="#78350f">¿Barcode Válido?</text>
+  <text x="520" y="368" text-anchor="middle" font-size="11" fill="#92400e">Numérico y Presente</text>
+
+  <!-- Rama Error 400 -->
+  <line x1="630" y1="355" x2="760" y2="355" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="695" y="345" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">No (Inválido)</text>
+  <rect x="760" y="325" width="230" height="60" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
+  <text x="875" y="350" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">HTTP 400 Bad Request</text>
+  <text x="875" y="370" text-anchor="middle" font-size="11" fill="#b91c1c">Respond - Validation Error</text>
+
+  <!-- Rama API Call -->
+  <line x1="520" y1="400" x2="520" y2="460" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="545" y="430" font-size="12" font-weight="bold" fill="#15803d">Sí</text>
+
+  <rect x="400" y="460" width="240" height="60" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="485" text-anchor="middle" font-size="13" font-weight="bold" fill="#312e81">GET Open Food Facts v2</text>
+  <text x="520" y="505" text-anchor="middle" font-size="11" fill="#4338ca">API Call (neverError: true)</text>
+
+  <line x1="520" y1="520" x2="520" y2="580" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision 3: Product Found? -->
+  <polygon points="520,580 630,625 520,670 410,625" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="620" text-anchor="middle" font-size="13" font-weight="bold" fill="#78350f">¿Producto Existe?</text>
+  <text x="520" y="638" text-anchor="middle" font-size="11" fill="#92400e">status !== 0</text>
+
+  <!-- Rama 404 -->
+  <line x1="630" y1="625" x2="760" y2="625" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="695" y="615" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">No (404)</text>
+  <rect x="760" y="595" width="230" height="60" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
+  <text x="875" y="620" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">HTTP 404 Not Found</text>
+  <text x="875" y="640" text-anchor="middle" font-size="11" fill="#b91c1c">Respond - Product Not Found</text>
+
+  <!-- Rama Nutriments Check -->
+  <line x1="520" y1="670" x2="520" y2="730" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="545" y="700" font-size="12" font-weight="bold" fill="#15803d">Sí</text>
+
+  <!-- Decision 4: Nutriments sufficient? -->
+  <polygon points="520,730 630,775 520,820 410,775" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="770" text-anchor="middle" font-size="13" font-weight="bold" fill="#78350f">¿Nutrientes OK?</text>
+  <text x="520" y="788" text-anchor="middle" font-size="11" fill="#92400e">sugars / fat presentes</text>
+
+  <!-- Rama Insufficient Data -->
+  <line x1="630" y1="775" x2="760" y2="775" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="695" y="765" text-anchor="middle" font-size="12" font-weight="bold" fill="#ea580c">No (Vacíos)</text>
+  <rect x="760" y="745" width="230" height="60" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="875" y="770" text-anchor="middle" font-size="13" font-weight="bold" fill="#9a3412">HTTP 200 OK (JSON)</text>
+  <text x="875" y="790" text-anchor="middle" font-size="11" fill="#c2410c">Respond - Insufficient Data</text>
+
+  <!-- Rama Set Flat Fields -->
+  <line x1="520" y1="820" x2="520" y2="880" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="545" y="850" font-size="12" font-weight="bold" fill="#15803d">Sí</text>
+
+  <rect x="390" y="880" width="260" height="60" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="905" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Set - Extract Flat Fields</text>
+  <text x="520" y="925" text-anchor="middle" font-size="11" fill="#475569">notación de corchetes: energy-kcal_100g</text>
+
+  <line x1="520" y1="940" x2="520" y2="1000" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Code Classifier -->
+  <rect x="360" y="1000" width="320" height="70" rx="8" fill="#f8fafc" stroke="#0f172a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="1025" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">Code - Nutrition Classifier</text>
+  <text x="520" y="1045" text-anchor="middle" font-size="11" fill="#334155">Semáforo + Nutri-Score + Worst Case</text>
+  <text x="520" y="1060" text-anchor="middle" font-size="11" fill="#334155">Puntuación Preocupación: 0 a 3</text>
+
+  <line x1="520" y1="1070" x2="520" y2="1130" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision 5: Health Threshold -->
+  <polygon points="520,1130 630,1175 520,1220 410,1175" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="1170" text-anchor="middle" font-size="13" font-weight="bold" fill="#78350f">¿No Saludable?</text>
+  <text x="520" y="1188" text-anchor="middle" font-size="11" fill="#92400e">Validate - Health Threshold</text>
+
+  <!-- Rama Cautious -->
+  <path d="M 410 1175 L 260 1175 L 260 1250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="320" y="1165" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">Sí (No Saludable)</text>
+  <rect x="140" y="1250" width="240" height="65" rx="8" fill="#fed7aa" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="260" y="1275" text-anchor="middle" font-size="13" font-weight="bold" fill="#7c2d12">AI - Health Verdict (Cautious)</text>
+  <text x="260" y="1295" text-anchor="middle" font-size="11" fill="#9a3412">Groq LLM: Tono Cauteloso y Empático</text>
+
+  <!-- Rama Encouraging -->
+  <path d="M 630 1175 L 780 1175 L 780 1250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="715" y="1165" text-anchor="middle" font-size="12" font-weight="bold" fill="#16a34a">No (Saludable/Mod)</text>
+  <rect x="660" y="1250" width="240" height="65" rx="8" fill="#bbf7d0" stroke="#16a34a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="780" y="1275" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">AI - Health Verdict (Encouraging)</text>
+  <text x="780" y="1295" text-anchor="middle" font-size="11" fill="#166534">Groq LLM: Tono Alentador y Positivo</text>
+
+  <!-- Converge to Merge -->
+  <path d="M 260 1315 L 260 1375 L 430 1375" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 780 1315 L 780 1375 L 610 1375" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="430" y="1350" width="180" height="50" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="1372" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">Merge (Append)</text>
+  <text x="520" y="1388" text-anchor="middle" font-size="10" fill="#475569">Consolidate Outputs</text>
+
+  <line x1="520" y1="1400" x2="520" y2="1450" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Format Text -->
+  <rect x="380" y="1450" width="280" height="60" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="1475" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">Set - Format Text Verdict</text>
+  <text x="520" y="1495" text-anchor="middle" font-size="11" fill="#475569">Titular + Marcadores (🟢/🔴) + Párrafo IA</text>
+
+  <line x1="520" y1="1510" x2="520" y2="1570" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Final Response -->
+  <rect x="380" y="1570" width="280" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="520" y="1595" text-anchor="middle" font-size="13" font-weight="bold" fill="#166534">Respond - Plain Text Verdict</text>
+  <text x="520" y="1615" text-anchor="middle" font-size="11" fill="#15803d">HTTP 200 (text/plain; charset=utf-8)</text>
+
+</svg>
